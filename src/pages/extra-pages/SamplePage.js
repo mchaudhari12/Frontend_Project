@@ -3,23 +3,18 @@ import { Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import fetchGetData from 'client/client';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const apiUrl = 'http://localhost:8080/api/v1';
-
-fetchGetData(apiUrl)
-  .then(res => {
-    // Do something with the data
-    console.log('Data:', res.data);
-  })
-  .catch(error => {
-    // Handle errors from the fetchData function
-    console.error('Error in .then:', error.message);
-  });
-
-
-const SamplePage = () => (
-  <MainCard title="Sample Card">
+const SamplePage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('token');
+    if (!isLoggedIn) {
+      navigate('/login');
+    } 
+  }, []); // The empty dependency array ensures that the effect runs only once, on mount
+  return (<MainCard title="Sample Card">
     <Typography variant="body2">
       Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
       minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
@@ -27,6 +22,6 @@ const SamplePage = () => (
       descent molls anim id est labours.
     </Typography>
   </MainCard>
-);
+)};
 
 export default SamplePage;

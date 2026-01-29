@@ -1,10 +1,22 @@
 import React, {useState} from 'react';
 import { Button, TextField, Container } from '@mui/material';
+import {fetchPostData} from 'client/client';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const AuthLogin = () => {6
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const isLoggedIn = localStorage.getItem('token');
+      if(isLoggedIn){
+        navigate('/');
+      }
+  }, []); //The empty dependency array ensures that effect run only once, on mount
 
   const validateEmail = () => {
     // Basic email format validation
@@ -17,7 +29,7 @@ const AuthLogin = () => {6
     return password.length >= 6 && password.length <= 15;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Reset previous errors
     setErrors({ email: '', password: '' });
 
@@ -32,7 +44,19 @@ const AuthLogin = () => {6
       return;
     }
     // Add your login logic here
-    console.log('Logging in with:', email, password);
+    fetchPostData("/auth/token",{email,password})
+    .then((response) => {
+      const { token } = response.data;
+      setLoginError('');
+      localStorage.setItem('token', token);
+      navigate('/');
+      
+    }) .catch((error) => {
+        console.error('Login error:', error);
+        // Handle other login errors
+        setLoginError('An error occurred during login');
+  });
+
   };
 
     return (
@@ -61,7 +85,7 @@ const AuthLogin = () => {6
           <Button variant="contained" color="primary" fullWidth onClick={handleLogin}>
           Login
         </Button>
-      
+        {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
       </Container>
     );
 

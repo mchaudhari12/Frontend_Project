@@ -15,6 +15,7 @@ const AuthLogin = () => {6
       const isLoggedIn = localStorage.getItem('token');
       if(isLoggedIn){
         navigate('/');
+        window.location.reload()
       }
   }, []); //The empty dependency array ensures that effect run only once, on mount
 
@@ -50,6 +51,7 @@ const AuthLogin = () => {6
       setLoginError('');
       localStorage.setItem('token', token);
       navigate('/');
+      window.location.reload()
       
     }) .catch((error) => {
         console.error('Login error:', error);

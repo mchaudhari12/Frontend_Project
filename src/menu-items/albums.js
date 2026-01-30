@@ -25,7 +25,7 @@ const albums = {
       id: 'AddAlbum',
       title: 'Add Album',
       type: 'item',
-      url: '/add-album',
+      url: '/album/add',
       icon: icons.FileImageOutlined
     }
   ]
